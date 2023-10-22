@@ -10,3 +10,10 @@ EX:
 請輸入華氏溫度:ABC
 輸入錯誤!
 """
+try:
+    f =  int(input('please write down the f'))
+    c = (f - 32  + ) * 5/9    
+    print("f:" + str(f) + "度c:" + str(c) + "度c")
+
+except:
+    print("error")
