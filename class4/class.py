@@ -42,11 +42,20 @@ import turtle
 # turtle.stamp()
 # turtle.penup
 
-turtle.color("blue")
-turtle.shape("circle")
-turtle.penup()
-for i in range(0, 360, 2):
-    turtle.forward(i)
-    turtle.stamp()
-    turtle.right(18)
-turtle.done()
+# turtle.color("blue")
+# turtle.shape("circle")
+# turtle.penup()
+# for i in range(0, 360, 2):
+#     turtle.forward(i)
+#     turtle.stamp()
+#     turtle.right(18)
+# turtle.done()
+password = "hi"
+while password != "1234":
+    password = input("entering the pasword")
+    if password == "1234":
+        print("welcome gordon")
+    elif password == "5678":
+        print("welcome stranger")
+    else:
+        print("error")
