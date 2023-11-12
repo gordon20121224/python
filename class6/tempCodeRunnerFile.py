@@ -1,7 +1,6 @@
-sum = 0
-
-# price = int(input("輸入商品"))
-# while price != 0:
-#     sum += price
-#     print("總經額為" + str(sum) + "元")
-#     price = int(input("輸入商品"))
+a = input(please enter a number:)
+# for i in range(1,2): 
+#     >>>val= '*' * 3
+#     >>>print(val)
+#     >>>***
+#     if a = 2:
