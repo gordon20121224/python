@@ -49,6 +49,27 @@ while True:
         x = int(input("請輸入想要新增點餐清單:"))
         y = input("在指定位置加入餐點:")
         order_list.insert(x, y)
+    elif option == "4":
+        ans = input("請輸入你想要的餐點名稱")
+        print(order_list.count(ans))
+    elif option == "5":
+        order_list.pop()
+    elif option == "6":
+        l = int(input("請輸入特定位置:"))
+        order_list.pop(l)
+    elif option == "7":
+        order_list.sort()
+        print(order_list)
+    elif option == "8":
+        order_list.sort(reverse=True)
+        print(order_list)
+    elif option == "9":
+        order_list.reverse()
+        print(order_list)
+    elif option == "10":
+        x = input("餐點名稱是什麼:")
+        order_list.index(x)
+        print(order_list)
     elif option == "11":
         print("thank u to use the order machine!")
         break
@@ -56,3 +77,11 @@ while True:
         print("please enter a useful option!")
         continue
     print("目前的點餐清單:" + str(order_list))
+取得元素值
+元素走訪
+    key :
+    items :
+    for item in items:
+items = d.items()
+for key , value in itens:
+    print(key, value)
