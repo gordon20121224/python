@@ -77,11 +77,12 @@ while True:
         print("please enter a useful option!")
         continue
     print("目前的點餐清單:" + str(order_list))
-取得元素值
-元素走訪
-    key :
-    items :
-    for item in items:
+# 取得元素值
+# 元素走訪
+# key :
+# items :
+# for item in items:
+d = {}
 items = d.items()
-for key , value in itens:
+for key, value in items:
     print(key, value)
