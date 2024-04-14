@@ -7,22 +7,22 @@ import socket
 HOST = "localhost"
 PORT = 5438
 server_socket = socket.socket()
-server_socket.bind((HOST.PORT))
+server_socket.bind((HOST, PORT))
 server_socket.listen(5)
 print("server:{} port:{} start".format(HOST, PORT))
-client.addr = server_socket.accept()
+client, addr = server_socket.accept()
 print("client address:{}, port:{}".format(addr[0], addr[1]))
 #########################主程式#########################
 
 while True:
-    msg = client.recv(128.decode("utf8")
-    print("Recieve message:" msg)
+    msg = client.recv(128).decode("utf8")
+    print("Recieve message:", msg)
     reply = ""
 
-    if msg=="Hi":
+    if msg == "Hi":
         reply = "hello"
         client.send(reply.encode("utf8"))
-    elif msg =="Bye":
+    elif msg == "Bye":
         client.send(b"quit")
         break
     else:
