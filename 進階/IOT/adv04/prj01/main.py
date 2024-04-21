@@ -1,5 +1,5 @@
 #########################匯入模組#########################
-from machine import Pin, ADC
+from machine import Pin, ADC, PWM
 from time import sleep
 import mcu
 
