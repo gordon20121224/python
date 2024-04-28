@@ -1,4 +1,4 @@
-import mcu
+import adv08.mcu as mcu
 
 gpio = mcu.gpio()
 

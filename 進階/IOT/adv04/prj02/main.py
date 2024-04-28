@@ -1,7 +1,7 @@
 #########################匯入模組#########################
 from time import sleep
 from machine import Pin, ADC, PWM
-import mcu
+import adv08.mcu as mcu
 
 
 #########################函式與類別定義#########################

@@ -2,7 +2,7 @@
 from umqtt.simple import MQTTClient
 import sys
 import time
-import mcu
+import adv08.mcu as mcu
 
 
 #########################函式與類別定義#########################
