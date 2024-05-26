@@ -1,5 +1,5 @@
 #########################匯入模組#########################
-import mcu
+import adv12.mcu as mcu
 from machine import Pin, I2C
 import ssd1306
 

@@ -1,6 +1,6 @@
 #########################匯入模組#########################
 import time
-import mcu
+import adv12.mcu as mcu
 from umqtt.simple import MQTTClient
 import sys
 from machine import Pin, ADC

@@ -2,7 +2,7 @@
 from umqtt.simple import MQTTClient
 import sys
 import time
-import mcu
+import adv12.mcu as mcu
 from machine import Pin, ADC
 
 

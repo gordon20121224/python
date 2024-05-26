@@ -2,7 +2,7 @@
 from machine import Pin
 import dht
 import time 
-import mcu
+import adv12.mcu as mcu
 #########################函式與類別定義#########################
 
 #########################宣告與設定#########################
