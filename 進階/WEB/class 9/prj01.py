@@ -26,25 +26,65 @@ async def on_ready():
 
 @bot.event  # 事件
 async def on_message(message):
-    channel_id = message.channel.id # 取得頻道id
+    channel_id = message.channel.id  # 取得頻道id
     if message.author == bot.user:  # 如果是机器人則略過
         return  # 略過
     if message.content == "hello":
         await message.channel.send("Hello!")  # 回傳消息
-    elif channel_id in channel_games: # 如果頻道存在
-        user_input = message.content.strip() # 取得輸入的內容
-        if user_input == "結束游戲": # 如果輸入的內容是結束游戲
-            channel_games.pop(channel_id) # 刪除頻道
-            await message.channel.send("游戲結束！") # 回傳消息
+    elif channel_id in channel_games:  # 如果頻道存在
+        user_input = message.content.strip()  # 取得輸入的內容
+        if user_input == "結束游戲":  # 如果輸入的內容是結束游戲
+            channel_games.pop(channel_id)  # 刪除頻道
+            await message.channel.send("游戲結束！")  # 回傳消息
         else:
-            game_data = channel_games[channel_id]["game_data"] # 取得遊戲資料
-            if "history" not in channel_games[channel_id]: # 如果沒有历史記錄
-                channel_games[channel_id]["history"] = [] # 建立历史記錄
-            history = channel_games[channel_id]["history"] # 取得历史記錄
-            history.append({"role":"user","content":user_input}) # 加入历史記錄
-#以頻道為鍵，遊戲狀態為value，這是一個全域變數所有指令都可以讀取
-#如果把字典當作全域變數就不需要宣告global就可以直接修改字典里的數值
+            game_data = channel_games[channel_id]["game_data"]  # 取得遊戲資料
+            if "history" not in channel_games[channel_id]:  # 如果沒有历史記錄
+                channel_games[channel_id]["history"] = []  # 建立历史記錄
+            history = channel_games[channel_id]["history"]  # 取得历史記錄
+            history.append({"role": "user", "content": user_input})  # 加入历史記錄
+            messages = (
+                [
+                    {
+                        "role": "system",
+                        "content": f"""
+你是一個海龜湯游戲的主持人根據以下的謎題回答玩家的提問。
+你的回答只會是「是」、「不是」或「無可奉告」，「恭喜答對」并盡可能簡短。 
+當玩家要求提示的時候你會提供關鍵字當做提示 。
+謎題:{game_data["question"]}
+
+解答:{game_data["answer"]}
+                        """,
+                    },
+                ]
+                + history
+            )
+            try:
+                response = openai.chat.completions.create(
+                    model="gpt-4o",
+                    messages=messages,
+                    temperature=0.5,
+                )
+                answer = response.choices[0].message.content
+                if answer == "恭喜答對":
+                    game_data["solved"] = True
+                    await message.channel.send("🎉恭喜你們!答對了!游戲結束。 🎉")
+                    channel_games.pop(channel_id)  # 游戲結束 移除該頻道的游戲狀態
+                else:
+                    history.append({"role": "assistant", "content": answer})
+                    channel_games[channel_id]["history"] = history
+                    await message.channel.send(answer)
+                    # debug
+                    print(messages)
+            except Exception as e:
+                await message.channel.send(f"發生錯誤：{e}")
+    else:
+        await bot.process_commands(message)
+
+
+# 以頻道為鍵，遊戲狀態為value，這是一個全域變數所有指令都可以讀取
+# 如果把字典當作全域變數就不需要宣告global就可以直接修改字典里的數值
 channel_games = {}
+
 
 #######################指令#######################
 @tree.command(name="hello", description="Say hello to the bot!")  # 建立指令
@@ -136,22 +176,25 @@ async def weather(
                     await interaction.followup.send(f"發生錯誤：{e}")
         else:
             await interaction.followup.send(f"找不到**{city}**的天氣資訊")
+
+
 @tree.command(name="turtle_game", description="開啟海龜湯遊戲")  # 建立指令
 async def turtle_game(interaction: discord.Interaction):
-    channel_id = interaction.channel.id # 取得頻道id
-    if channel_id in channel_games: # 如果頻道已經存在
-        await interaction.response.send_message("頻道已經存在，請勿重複開啟") # 回傳消息
-    else: # 如果頻道不存在, 則建立頻道
+    channel_id = interaction.channel.id  # 取得頻道id
+    if channel_id in channel_games:  # 如果頻道已經存在
+        await interaction.response.send_message(
+            "頻道已經存在，請勿重複開啟"
+        )  # 回傳消息
+    else:  # 如果頻道不存在, 則建立頻道
         channel_games[channel_id] = {
-        "game_data" : {
-            "question":"一個人在沙漠中發現了一具屍體，旁邊有一根燒過的火柴。發生了什麼事？
-            "answer":"他參加的熱氣球比賽為減了重需要有人跳下去他抽到最短的火柴只好跳下。",
-            "solved":False,
-
-        },
-        "history":[],   
-        "current_question":0,
-    }
+            "game_data": {
+                "question": "一位母親正在逛動物園，突然接到遠在非洲的女兒來電，她聽到一陣奇怪的聲音，最後意識到了什麼，就發瘋了。為什麼？",
+                "answer": "母親發現那個奇怪的聲音，和眼前獅子吃肉的聲音一模一樣，猜測女兒在非洲遭遇到意外，於是崩潰了",
+                "solved": False,
+            },
+            "history": [],
+            "current_question": 0,
+        }
     await interaction.response.send_message(
         f"""
     遊戲開始!
@@ -160,6 +203,8 @@ async def turtle_game(interaction: discord.Interaction):
     我的回應只會是「是」、「不是」或「無可奉告」。
     """
     )
+
+
 #######################啟動#######################
 def main():
     # 讀取環境變數，並啟動機器人
